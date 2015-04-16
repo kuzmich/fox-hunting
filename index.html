@@ -1,0 +1,80 @@
+<!doctype html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7" lang=""> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8" lang=""> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9" lang=""> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang=""> <!--<![endif]-->
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title>Охота на лис</title>
+        <meta name="description" content="Игра 'Охота на лис'">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="apple-touch-icon" href="apple-touch-icon.png">
+
+        <link rel="stylesheet" href="css/normalize.min.css">
+        <link rel="stylesheet" href="css/main.css">
+        <style>
+            #canvas {
+                float: left;
+                margin-right: 2em;
+            }
+        </style>
+
+        <script src="js/vendor/modernizr-2.8.3-respond-1.4.2.min.js"></script>
+    </head>
+    <body>
+        <!--[if lt IE 8]>
+            <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+        <![endif]-->
+
+        <div class="header-container">
+            <header class="wrapper clearfix">
+                <h1 class="title">У Кузьмича</h1>
+                <nav>
+                    <ul>
+                        <li><a href="#">nav ul li a</a></li>
+                        <li><a href="#">nav ul li a</a></li>
+                        <li><a href="#">nav ul li a</a></li>
+                    </ul>
+                </nav>
+            </header>
+        </div>
+
+        <div class="main-container">
+            <div class="main wrapper clearfix">
+
+                <article>
+                    <header>
+                        <h1>Охота на лис</h1>
+                        <p>Клетка с обнаруженной лисой (или лисами) помечается рыжим. Цифры означают число лис,
+                        пеленгуемых из данного квадрата.</p>
+                    </header>
+                    <section>
+                        <canvas id="canvas"></canvas>
+                        <p>Осталось найти лис: <span id="hiddenFoxesCounter"></span></p>
+                        <p>Ходов сделано: <span id="stepsCounter"></span></p>
+                        <p><button></button>
+                    </section>
+                </article>
+
+                <aside>
+                    <h3>Правила игры</h3>
+                    <p>На поле прячутся несколько лис. У вас есть радар, поместив который на клетку поля,
+                        можно узнать, сколько лис пеленгуется с данной клетки. Пеленг идет по
+                        горизонтали, вертикали и по диагоналям от выбранной клетки. Помните - в
+                        одной клекте может прятаться несколько лис. Ваша задача - за минимальное
+                        количество шагов вычислить, где прячутся лисы!</p>
+                </aside>
+
+            </div> <!-- #main -->
+        </div> <!-- #main-container -->
+
+        <div class="footer-container">
+            <footer class="wrapper">
+                <h3>&copy; Alexey Kuzminich</h3>
+            </footer>
+        </div>
+
+        <script src="js/main.js"></script>
+    </body>
+</html>
