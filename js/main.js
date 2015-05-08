@@ -15,6 +15,100 @@ var gFoundFoxes;
 var gClickedCells;
 var gStepsTaken;
 
+var FHO = {
+    gridSize: {cols: 5, rows: 5},
+    cellSize: {width: 20, height: 20},
+    gridOffset: {x: 20, y: 20},
+    numberOfFoxes: 3,
+
+    gridColor: "#5e5e5e",
+    gridFont: "12px sans-serif",
+    gridFontColor: "black",
+    foxColor: "#f16529",
+    fontColor: "black"
+};
+
+var FHG = {
+    canvas: null,
+    context: null,
+    hiddenFoxes: [],
+    foundFoxes: [],
+    clickedCells: [],
+    stepsTaken: 0
+};
+
+function Grid(options, context, clickHandler) {
+    this.size = options.gridSize;
+    this.cellSize = options.cellSize;
+    this.offset = options.gridOffset; 
+    this.lineColor = options.gridColor;
+    this.textColor = options.gridFontColor;
+    this.font = options.gridFont;
+    this.context = context;
+    this.clickHandler = clickHandler;
+};
+Grid.prototype.drawGrid = function () {
+    var context = this.context;
+
+    var initX = this.offset.x + 0.5;
+    var initY = this.offset.y + 0.5;
+    var maxX = this.cellSize.width * this.size.cols + initX;
+    var maxY = this.cellSize.height * this.size.rows + initY;
+
+    // рисуем вертикальные линии
+    for (var x = initX; x <= maxX; x += this.cellSize.width) {
+      context.moveTo(x, initY);
+      context.lineTo(x, maxY);
+    }
+
+    // рисуем горизонтальные линии
+    for (var y = initY; y <= maxY; y += this.cellSize.height) {
+      context.moveTo(initX, y);
+      context.lineTo(maxX, y);
+    }
+
+    context.strokeStyle = this.lineColor;
+    context.stroke();
+};
+Grid.prototype.drawNames = function () {
+    //var columnNames = ['А', 'Б', 'В', 'Г', 'Д', 'Е', 'Ж', 'З', 'И', 'К'];
+    //var rowNames = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'];
+    var columnNames = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
+    var rowNames = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
+
+    var context = this.context;
+    var initX, initY;
+
+    context.font = this.font;
+    context.fillStyle = this.textColor;
+
+    // рисуем названия столбцов
+    context.textAlign = "center";
+    context.textBaseline = "bottom";
+    initX = this.offset.x + this.cellSize.width/2;
+    initY = this.offset.y - 3;
+    for (var i = 0; i < Math.min(columnNames.length, this.size.cols); i++) {
+        context.fillText(columnNames[i], initX + this.cellSize.width * i, initY);
+    };
+
+    // рисуем названия рядов
+    context.textAlign = "right";
+    context.textBaseline = "middle";
+    initX = this.offset.x - 5;
+    initY = this.offset.y + this.cellSize.height/2;
+    for (var i = 0; i < Math.min(rowNames.length, this.size.rows); i++) {
+        context.fillText(rowNames[i], initX, initY + this.cellSize.height * i);
+    };
+};
+
+function Cell(x, y) {
+    this.x = x;
+    this.y = j;
+}
+Cell.prototype.drawFox = function (color) {
+}
+Cell.prototype.drawNumber = function (number, color) {
+}
 
 function getRandomInt(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -28,60 +122,7 @@ function getContext() {
     return getCanvas().getContext("2d");
 }
 
-function drawGrid(gridLeftTop, gridSize, cellSize, gridColor) {
-    var context = gContext;
 
-    var initX = gridLeftTop[0] + 0.5;
-    var initY = gridLeftTop[1] + 0.5;
-    var maxX = gridSize[0] * cellSize[0] + initX;
-    var maxY = gridSize[1] * cellSize[1] + initY;
-
-    // рисуем вертикальные линии
-    for (var x = initX; x <= maxX; x += cellSize[0]) {
-      context.moveTo(x, initY);
-      context.lineTo(x, maxY);
-    }
-
-    // рисуем горизонтальные линии
-    for (var y = initY; y <= maxY; y += cellSize[1]) {
-      context.moveTo(initX, y);
-      context.lineTo(maxX, y);
-    }
-
-    context.strokeStyle = gridColor;
-    context.stroke();
-}
-
-function drawNames(gridLeftTop, cellSize, color) {
-    //var columnNames = ['А', 'Б', 'В', 'Г', 'Д', 'Е', 'Ж', 'З', 'И', 'К'];
-    //var rowNames = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'];
-    var columnNames = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
-    var rowNames = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
-
-    var context = gContext;
-    var initX, initY;
-
-    context.font = "12px sans-serif";
-    context.fillStyle = color;
-
-    // рисуем названия столбцов
-    context.textAlign = "center";
-    context.textBaseline = "bottom";
-    initX = gridLeftTop[0] + cellSize[0]/2;
-    initY = gridLeftTop[1] - 3;
-    for (var i = 0; i < Math.min(columnNames.length, GRID_SIZE[0]); i++) {
-        context.fillText(columnNames[i], initX + (cellSize[0] * i), initY);
-    }
-
-    // рисуем названия рядов
-    context.textAlign = "right";
-    context.textBaseline = "middle";
-    initX = gridLeftTop[0] - 5;
-    initY = gridLeftTop[1] + cellSize[1]/2;
-    for (var i = 0; i < Math.min(rowNames.length, GRID_SIZE[1]); i++) {
-        context.fillText(rowNames[i], initX, initY + (cellSize[1] * i));
-    }
-}
 
 function drawFox(cell, color) {
     var context = gContext;
@@ -261,4 +302,7 @@ function onCanvasClick(e) {
     }
 }
 
-initGame();
+//initGame();
+var grid = new Grid(FHO, getContext(), null);
+grid.drawGrid();
+grid.drawNames();
