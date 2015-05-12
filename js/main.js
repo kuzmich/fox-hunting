@@ -147,14 +147,6 @@ function redrawBoard() {
     drawClickedCells();
 }
 
-function placeFoxes() {
-    var foxes = [];
-    for (var i = 0; i < FHO.numberOfFoxes; i++) {
-        foxes.push(Cell(getRandomInt(0, FHO.grid.size.cols - 1),
-                        getRandomInt(0, FHO.grid.size.rows - 1)));
-    }
-    return foxes;
-}
 
 function countDetectableFoxes(cell, foxes) {
     var count = 0;
@@ -210,29 +202,9 @@ function markFoxAsFound(cell) {
     FHG.hiddenFoxes = FHG.hiddenFoxes.filter(function (fox) {return !isThisCell(fox)});
 }
 
-function setCanvasSize() {
-    FHG.canvas.width = FHO.grid.size.cols * FHO.grid.cellSize.width + FHO.grid.offset.x + 1;
-    FHG.canvas.height = FHO.grid.size.rows * FHO.grid.cellSize.height + FHO.grid.offset.y + 1;
-}
-
 function updateStats() {
     document.getElementById('hiddenFoxesCounter').textContent = FHG.hiddenFoxes.length;
     document.getElementById('stepsCounter').textContent = FHG.stepsTaken;
-}
-
-function initGame() {
-    FHG.canvas = getCanvas();
-    FHG.context = getContext();
-    FHG.canvas.addEventListener("click", onCanvasClick, false);
-    setCanvasSize();
-
-    FHG.hiddenFoxes = placeFoxes();
-    FHG.foundFoxes = [];
-    FHG.clickedCells = [];
-    FHG.stepsTaken = 0;
-
-    redrawBoard();
-    updateStats();
 }
 
 function getClickedCell(e) {
@@ -275,6 +247,36 @@ function onCanvasClick(e) {
         FHG.stepsTaken++;
         updateStats();
     }
+}
+
+
+function setCanvasSize() {
+    FHG.canvas.width = FHO.grid.size.cols * FHO.grid.cellSize.width + FHO.grid.offset.x + 1;
+    FHG.canvas.height = FHO.grid.size.rows * FHO.grid.cellSize.height + FHO.grid.offset.y + 1;
+}
+
+function placeFoxes() {
+    var foxes = [];
+    for (var i = 0; i < FHO.numberOfFoxes; i++) {
+        foxes.push(Cell(getRandomInt(0, FHO.grid.size.cols - 1),
+                        getRandomInt(0, FHO.grid.size.rows - 1)));
+    }
+    return foxes;
+}
+
+function initGame() {
+    FHG.canvas = getCanvas();
+    FHG.context = getContext();
+    FHG.canvas.addEventListener("click", onCanvasClick, false);
+    setCanvasSize();
+
+    FHG.hiddenFoxes = placeFoxes();
+    FHG.foundFoxes = [];
+    FHG.clickedCells = [];
+    FHG.stepsTaken = 0;
+
+    redrawBoard();
+    updateStats();
 }
 
 initGame();
