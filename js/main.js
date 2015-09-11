@@ -144,7 +144,7 @@ function redrawBoard() {
               FHO.grid.fontColor);
 
     drawFoundFoxes();
-    drawHiddenFoxes();
+    //drawHiddenFoxes();
     drawClickedCells();
 
     //drawDots();
