@@ -52,13 +52,13 @@ function drawGrid(offset, size, cellSize, color) {
     for (var x = initX; x <= maxX; x += cellSize.width) {
       context.moveTo(x, initY);
       context.lineTo(x, maxY);
-    }
+    };
 
     // рисуем горизонтальные линии
     for (var y = initY; y <= maxY; y += cellSize.height) {
       context.moveTo(initX, y);
       context.lineTo(maxX, y);
-    }
+    };
 
     context.strokeStyle = color;
     context.stroke();
@@ -133,6 +133,7 @@ function drawClickedCells() {
 }
 
 function redrawBoard() {
+    // erase canvas' content and reset it's properties
     FHG.canvas.width = FHG.canvas.width;
 
     drawGrid(FHO.grid.offset, FHO.grid.size, FHO.grid.cellSize, FHO.grid.color);
@@ -145,6 +146,8 @@ function redrawBoard() {
     drawFoundFoxes();
     drawHiddenFoxes();
     drawClickedCells();
+
+    //drawDots();
 }
 
 
@@ -280,3 +283,45 @@ function initGame() {
 }
 
 initGame();
+
+
+function drawDots() {
+    var context = FHG.context;
+    var o = FHO.grid;
+
+    //context.fillStyle = 'red';
+    //context.fillRect(o.offset.x, o.offset.y, 1, 1);
+
+    context.beginPath();
+
+    var initX = o.offset.x + 0.5;
+
+    context.moveTo(initX, o.offset.y - 1);
+    context.lineTo(initX, o.offset.y + 1);
+
+    context.moveTo(initX + o.cellSize.width, o.offset.y - 1);
+    context.lineTo(initX + o.cellSize.width, o.offset.y + 1);
+
+    context.strokeStyle = "red";
+    context.stroke();
+}
+
+function getCellPos(cell) {
+    var offset = FHO.grid.offset;
+    var cellSize = FHO.grid.cellSize;
+
+    var pos = {
+        left: offset.x + (cellSize.width * cell.col) + 1,
+        top: offset.y + (cellSize.height * cell.row) + 1,
+    };
+    pos.right = pos.left + cellSize.width - 1;
+    pos.bottom = pos.top + cellSize.height - 1;
+
+    pos.border = {};
+    pos.border.left = pos.left - 0.5;
+    pos.border.right = pos.right + 0.5;
+    pos.border.top = pos.top - 0.5;
+    pos.border.bottom = pos.bottom + 0.5;
+
+    return pos;
+}
