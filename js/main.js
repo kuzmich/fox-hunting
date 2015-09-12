@@ -26,6 +26,10 @@ function Cell(col, row) {
     return {col: col, row: row};
 }
 
+function sameCell(cell1, cell2) {
+    return cell1.col == cell2.col && cell1.row == cell2.row;
+}
+
 
 function getRandomInt(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -194,6 +198,26 @@ function isHiddenFox(cell) {
     return false;
 }
 
+function isExploredCell(cell) {
+    var fox, ccel, i;
+
+    for (i = 0; i < FHG.foundFoxes.length; i++) {
+        fox = FHG.foundFoxes[i];
+        if (sameCell(fox, cell)) {
+            return true;
+        }
+    }
+
+    for (i = 0; i < FHG.clickedCells.length; i++) {
+        ccell = FHG.clickedCells[i];
+        if (sameCell(ccell, cell)) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
 function markFoxAsFound(cell) {
     function isThisCell(fox) {
         return fox.col === cell.col && fox.row === cell.row
@@ -238,17 +262,23 @@ function getClickedCell(e) {
 
 function onCanvasClick(e) {
     var cell = getClickedCell(e);
+
     if (cell) {
         if (isHiddenFox(cell)) {
             markFoxAsFound(cell);
             redrawBoard();
-        }
-        else {
+
+            FHG.stepsTaken++;
+            updateStats();
+        } else if (isExploredCell(cell)) {
+            // nothing to do
+        } else {
             drawNumber(countDetectableFoxes(cell, FHG.hiddenFoxes), cell, FHO.fontColor);
             FHG.clickedCells.push(cell);
+
+            FHG.stepsTaken++;
+            updateStats();
         };
-        FHG.stepsTaken++;
-        updateStats();
     }
 }
 
