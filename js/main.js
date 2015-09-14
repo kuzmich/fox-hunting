@@ -232,6 +232,7 @@ function markFoxAsFound(cell) {
 function updateStats() {
     document.getElementById('hiddenFoxesCounter').textContent = FHG.hiddenFoxes.length;
     document.getElementById('stepsCounter').textContent = FHG.stepsTaken;
+    document.getElementById('start').textContent = gameIsOver() ? 'Сыграть еще' : 'Начать сначала';
 }
 
 function getClickedCell(e) {
@@ -297,12 +298,25 @@ function placeFoxes() {
     return foxes;
 }
 
+function gameIsOver() {
+    return FHG.hiddenFoxes.length == 0;
+}
+
+function onStartClick(e) {
+    resetGame();
+}
+
 function initGame() {
     FHG.canvas = getCanvas();
     FHG.context = getContext();
     FHG.canvas.addEventListener("click", onCanvasClick, false);
+    document.getElementById('start').addEventListener("click", onStartClick, false);
     setCanvasSize();
 
+    resetGame();
+}
+
+function resetGame() {
     FHG.hiddenFoxes = placeFoxes();
     FHG.foundFoxes = [];
     FHG.clickedCells = [];
