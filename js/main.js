@@ -280,6 +280,10 @@ function onCanvasClick(e) {
             FHG.stepsTaken++;
             updateStats();
         };
+
+        if (gameIsOver()) {
+            FHG.canvas.removeEventListener("click", onCanvasClick);
+        }
     }
 }
 
@@ -304,6 +308,7 @@ function gameIsOver() {
 
 function onStartClick(e) {
     resetGame();
+    FHG.canvas.addEventListener("click", onCanvasClick, false);
 }
 
 function initGame() {
